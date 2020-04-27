@@ -1,3 +1,31 @@
+# This project is a fork of [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin)
+
+## Motivation
+
+By design html-webpack-plugin does not support hmr. The idea to solve this 
+inconvenience is to write the file to the disk every time it gets recompiled 
+with different content and watch rewriting on the file system to reload html.
+
+When using webpack-dev-server with hmr, whenever you update any of your files, the 
+compiler will create a new asset named [asset-name][some-hash].hot-update.js.
+In response to this html-webpack-plugin will recompile the html file regardless 
+of the **cache** setting value (if true, it should recompile only when new files are 
+added or previous removed). This means that we cannot **watchContentBase** for the 
+html file when using hmr (because we will get full page reload on every change).
+The problem could be solved by adding **cacheIgnore** option which allows to ignore 
+some assets when checking for the cache.
+
+Usage: 
+
+```javascript
+new HtmlWebpackPlugin({
+  cache: true,
+  cacheIgnore: [/.+\.hot-update\.js$/i]
+})
+```
+
+Below is the documentation for the fork version of html-webpack-plugin.
+
 [![npm][npm]][npm-url]
 [![node][node]][node-url]
 ![npm](https://img.shields.io/npm/dw/html-webpack-plugin.svg)

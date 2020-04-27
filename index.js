@@ -49,6 +49,7 @@ class HtmlWebpackPlugin {
       favicon: false,
       minify: 'auto',
       cache: true,
+      cacheIgnore: [],
       showErrors: true,
       chunks: 'all',
       excludeChunks: [],
@@ -164,8 +165,20 @@ class HtmlWebpackPlugin {
         const assets = self.htmlWebpackPluginAssets(compilation, childCompilationOutputName, sortedEntryNames);
 
         // If the template and the assets did not change we don't have to emit the html
-        const assetJson = JSON.stringify(self.getAssetFiles(assets));
-        if (isCompilationCached && self.options.cache && assetJson === self.assetJson) {
+        let assetFiles = self.getAssetFiles(assets);
+        const { cache, cacheIgnore } = self.options;
+
+        if (cache && cacheIgnore && isCompilationCached) {
+          if (!Array.isArray(cacheIgnore)) {
+            throw new Error('cacheIgnore option has to be an instance of Array');
+          }
+          for (const ignorePattern of cacheIgnore) {
+            assetFiles = assetFiles.filter(file => !file.match(ignorePattern));
+          }
+        }
+        const assetJson = JSON.stringify(assetFiles);
+
+        if (cache && isCompilationCached && assetJson === self.assetJson) {
           return callback();
         } else {
           self.assetJson = assetJson;
