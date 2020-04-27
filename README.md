@@ -18,10 +18,23 @@ some assets when checking for the cache.
 Usage: 
 
 ```javascript
-new HtmlWebpackPlugin({
-  cache: true,
-  cacheIgnore: [/.+\.hot-update\.js$/i]
-})
+// webpack config
+module.exports = {
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'compiled.html',
+      cache: true,
+      cacheIgnore: [/.+\.hot-update\.js$/i]
+    }),
+    new HotModuleReplacementPlugin()
+  ],
+  devServer: {
+    index: 'compiled.html',
+    watchContentBase: true,
+    hot: true,
+    writeToDisk: file => new RegExp(`/compiled\.html$`).test(file),
+  }
+}
 ```
 
 Below is the documentation for the fork version of html-webpack-plugin.
