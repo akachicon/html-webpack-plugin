@@ -43,7 +43,7 @@
     "pug-loader": "2.4.0",
     "rimraf": "2.6.3",
     "semistandard": "^13.0.1",
-    "standard-version": "5.0.2",
+    "standard-version": "8.0.1",
     "style-loader": "0.23.1",
     "typescript": "3.8.3",
     "webpack": "4.35.2",
